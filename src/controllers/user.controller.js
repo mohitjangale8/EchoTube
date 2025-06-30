@@ -4,7 +4,8 @@ import {User} from "../models/user.models.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
-import { Subscription } from "../models/subscription.model.js"
+import mongoose from "mongoose"
+import { Subscription } from "../models/subscription.models.js"
 
 const generateAccessAndRefreshTokens = async(userId) =>{
     try {
@@ -371,7 +372,7 @@ const getUserChannelProfile = asyncHandler(async(req,res) =>{
                 },
                 isSubscribed:{
                     $cond: {
-                        if: {$in: [req.user?._id,"$subscribers.subsriber"]},
+                        if: {$in: [req.user?._id,"$subscribers.subscriber"]},
                         then: true,
                         else: false
                     }
@@ -413,7 +414,7 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
         {
             $lookup:{
                 from: "videos",
-                localfield:"watchHistory",
+                localField:"watchHistory",
                 foreignField:"_id",
                 as:"watchHistory",
                 pipeline: [
